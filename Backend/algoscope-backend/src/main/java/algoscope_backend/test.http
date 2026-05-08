@@ -1,0 +1,7 @@
+POST http://localhost:8080/api/graph/dijkstra
+Content-Type: application/json
+
+{
+  "graphId": "graph1",
+  "startNode": "A"
+}
