@@ -1,7 +1,6 @@
-POST http://localhost:8080/api/graph/dijkstra
+POST http://localhost:8080/api/sorting/quick-sort
 Content-Type: application/json
 
 {
-  "graphId": "graph1",
-  "startNode": "A"
+  "input": [5, 2, 8, 1]
 }

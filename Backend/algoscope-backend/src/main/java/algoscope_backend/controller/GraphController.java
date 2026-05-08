@@ -17,6 +17,13 @@ public class GraphController {
         return new GraphResponse(steps);
     }
 
+    @PostMapping("/dfs")
+    public GraphResponse dfs(@RequestBody GraphRequest request) {
+        Map<String, List<String>> graph = getGraph(request.getGraphId());
+        List<GraphStep> steps = generateDfsSteps(graph, request.getStartNode());
+        return new GraphResponse(steps);
+    }
+
     @PostMapping("/dijkstra")
     public GraphResponse dijkstra(@RequestBody GraphRequest request) {
         WeightedGraph graph = getWeightedGraph(request.getGraphId());
@@ -149,6 +156,84 @@ public class GraphController {
                                 new HashMap<>(),
                                 "Add neighbor " + neighbor + " to the queue.",
                                 5
+                        ));
+                    }
+                }
+            }
+        }
+
+        return steps;
+    }
+
+    private List<GraphStep> generateDfsSteps(Map<String, List<String>> graph, String start) {
+        List<GraphStep> steps = new ArrayList<>();
+        Set<String> visited = new LinkedHashSet<>();
+        Stack<String> stack = new Stack<>();
+
+        stack.push(start);
+
+        steps.add(new GraphStep(
+                null,
+                new ArrayList<>(visited),
+                new ArrayList<>(stack),
+                new ArrayList<>(),
+                new HashMap<>(),
+                "Initialize stack with start node " + start + ".",
+                2
+        ));
+
+        while (!stack.isEmpty()) {
+            String current = stack.pop();
+
+            steps.add(new GraphStep(
+                    current,
+                    new ArrayList<>(visited),
+                    new ArrayList<>(stack),
+                    new ArrayList<>(),
+                    new HashMap<>(),
+                    "Pop node " + current + " from the stack.",
+                    3
+            ));
+
+            if (!visited.contains(current)) {
+                visited.add(current);
+
+                steps.add(new GraphStep(
+                        current,
+                        new ArrayList<>(visited),
+                        new ArrayList<>(stack),
+                        new ArrayList<>(),
+                        new HashMap<>(),
+                        "Visit node " + current + ".",
+                        4
+                ));
+
+                List<String> neighbors = graph.get(current);
+
+                for (int i = neighbors.size() - 1; i >= 0; i--) {
+                    String neighbor = neighbors.get(i);
+
+                    steps.add(new GraphStep(
+                            current,
+                            new ArrayList<>(visited),
+                            new ArrayList<>(stack),
+                            new ArrayList<>(),
+                            new HashMap<>(),
+                            "Check neighbor " + neighbor + " of node " + current + ".",
+                            5
+                    ));
+
+                    if (!visited.contains(neighbor) && !stack.contains(neighbor)) {
+                        stack.push(neighbor);
+
+                        steps.add(new GraphStep(
+                                current,
+                                new ArrayList<>(visited),
+                                new ArrayList<>(stack),
+                                new ArrayList<>(),
+                                new HashMap<>(),
+                                "Push neighbor " + neighbor + " onto the stack.",
+                                6
                         ));
                     }
                 }

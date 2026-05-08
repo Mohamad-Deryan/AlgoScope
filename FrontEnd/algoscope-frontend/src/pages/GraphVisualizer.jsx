@@ -94,6 +94,24 @@ function GraphVisualizer() {
 
                 const data = await response.json();
                 setSteps(data.steps);
+            } else if (selectedAlgorithm === "DFS") {
+                const response = await fetch(`${API_BASE_URL}/api/graph/dfs`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        graphId: selectedPreset === "Graph 1" ? "graph1" : "graph2",
+                        startNode,
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to generate DFS steps.");
+                }
+
+                const data = await response.json();
+                setSteps(data.steps);
             } else if (selectedAlgorithm === "Dijkstra") {
                 const response = await fetch(`${API_BASE_URL}/api/graph/dijkstra`, {
                     method: "POST",
@@ -194,6 +212,7 @@ function GraphVisualizer() {
                         onChange={(e) => setSelectedAlgorithm(e.target.value)}
                     >
                         <option>BFS</option>
+                        <option>DFS</option>
                         <option>Dijkstra</option>
                     </select>
                 </div>
@@ -331,7 +350,7 @@ function GraphVisualizer() {
                             </div>
                         </div>
 
-                        {selectedAlgorithm === "BFS" ? (
+                        {selectedAlgorithm === "BFS" || selectedAlgorithm === "DFS" ? (
                             <>
                                 <div className="state-section">
                                     <h4>Visited Nodes</h4>
@@ -349,7 +368,7 @@ function GraphVisualizer() {
                                 </div>
 
                                 <div className="state-section">
-                                    <h4>Queue</h4>
+                                    <h4>{selectedAlgorithm === "DFS" ? "Stack" : "Queue"}</h4>
                                     <div className="tag-list">
                                         {queueState.length > 0 ? (
                                             queueState.map((nodeId, index) => (
@@ -436,6 +455,24 @@ function GraphVisualizer() {
                             </div>
                             <div className={currentLine === 5 ? "code-line active-line" : "code-line"}>
                                 5. Add each unvisited neighbor to the queue
+                            </div>
+                        </>
+                    ) : selectedAlgorithm === "DFS" ? (
+                        <>
+                            <div className={currentLine === 2 ? "code-line active-line" : "code-line"}>
+                                1. Push the start node onto the stack
+                            </div>
+                            <div className={currentLine === 3 ? "code-line active-line" : "code-line"}>
+                                2. Pop the top node from the stack
+                            </div>
+                            <div className={currentLine === 4 ? "code-line active-line" : "code-line"}>
+                                3. Mark the current node as visited
+                            </div>
+                            <div className={currentLine === 5 ? "code-line active-line" : "code-line"}>
+                                4. Check each neighbor of the current node
+                            </div>
+                            <div className={currentLine === 6 ? "code-line active-line" : "code-line"}>
+                                5. Push each unvisited neighbor onto the stack
                             </div>
                         </>
                     ) : (

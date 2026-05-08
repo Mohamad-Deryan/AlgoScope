@@ -73,6 +73,58 @@ function QuizPage() {
                 correctAnswer: "0",
             },
         ],
+
+        "DFS": [
+            {
+                question: "Which data structure is commonly used to implement DFS iteratively?",
+                options: ["Queue", "Stack", "Heap", "Priority Queue"],
+                correctAnswer: "Stack",
+            },
+            {
+                question: "What does DFS explore first?",
+                options: [
+                    "All nearest neighbors first",
+                    "The shortest path first",
+                    "As deep as possible before backtracking",
+                    "Only weighted edges",
+                ],
+                correctAnswer: "As deep as possible before backtracking",
+            },
+        ],
+        "Merge Sort": [
+            {
+                question: "Which strategy does Merge Sort use?",
+                options: [
+                    "Greedy approach",
+                    "Divide and conquer",
+                    "Breadth-first traversal",
+                    "Dynamic programming only",
+                ],
+                correctAnswer: "Divide and conquer",
+            },
+            {
+                question: "What is the time complexity of Merge Sort?",
+                options: ["O(n)", "O(n²)", "O(log n)", "O(n log n)"],
+                correctAnswer: "O(n log n)",
+            },
+        ],
+        "Quick Sort": [
+            {
+                question: "What is the main idea of Quick Sort?",
+                options: [
+                    "Using a queue to visit elements",
+                    "Choosing a pivot and partitioning the array",
+                    "Splitting the array and merging it",
+                    "Counting frequencies of elements",
+                ],
+                correctAnswer: "Choosing a pivot and partitioning the array",
+            },
+            {
+                question: "What is the worst-case time complexity of Quick Sort?",
+                options: ["O(n)", "O(n log n)", "O(n²)", "O(log n)"],
+                correctAnswer: "O(n²)",
+            },
+        ],
     };
 
     const [searchParams] = useSearchParams();
@@ -141,8 +193,11 @@ function QuizPage() {
                     <label>Algorithm</label>
                     <select value={selectedAlgorithm} onChange={handleAlgorithmChange}>
                         <option>Selection Sort</option>
+                        <option>Merge Sort</option>
+                        <option>Quick Sort</option>
                         <option>Factorial</option>
                         <option>BFS</option>
+                        <option>DFS</option>
                         <option>Dijkstra</option>
                     </select>
                 </div>

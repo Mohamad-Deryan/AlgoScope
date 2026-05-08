@@ -3,6 +3,7 @@ import PageHeader from "../components/PageHeader";
 import ControlPanel from "../components/ControlPanel";
 import InfoSection from "../components/InfoSection";
 import { API_BASE_URL } from "../config/api";
+import { useLocation } from "react-router-dom";
 
 function SortingVisualizer() {
     const [input, setInput] = useState("5,2,8,1");
@@ -14,6 +15,12 @@ function SortingVisualizer() {
     const [selectedPreset, setSelectedPreset] = useState("Small Example");
 
     const [error, setError] = useState("");
+
+    const location = useLocation();
+
+    const [selectedAlgorithm, setSelectedAlgorithm] = useState(
+        location.state?.algorithm || "Selection Sort"
+    );
 
     const currentArray = steps.length > 0 ? steps[currentStep].array : [];
     const currentExplanation =
@@ -28,7 +35,7 @@ function SortingVisualizer() {
 
     const presets = {
         "Small Example": "5,2,8,1",
-        "Reverse Order": "9,4,7,3,1",
+        "Reverse Order": "9,7,4,3,1",
         "Mixed Values": "6,3,8,2,5",
     };
 
@@ -57,7 +64,17 @@ function SortingVisualizer() {
             setError("");
             setIsPlaying(false);
 
-            const response = await fetch(`${API_BASE_URL}/api/sorting/selection-sort`, {
+            let endpoint = "";
+
+            if (selectedAlgorithm === "Selection Sort") {
+                endpoint = "/api/sorting/selection-sort";
+            } else if (selectedAlgorithm === "Merge Sort") {
+                endpoint = "/api/sorting/merge-sort";
+            } else if (selectedAlgorithm === "Quick Sort") {
+                endpoint = "/api/sorting/quick-sort";
+            }
+
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -129,8 +146,8 @@ function SortingVisualizer() {
     return (
         <div className="sorting-page">
             <PageHeader
-                title="Selection Sort Visualizer"
-                subtitle="Explore Selection Sort step by step with animated bars, explanations, and pseudocode guidance."
+                title={`${selectedAlgorithm} Visualizer`}
+                subtitle={`Explore ${selectedAlgorithm} step by step with animated bars, explanations, and pseudocode guidance.`}
             />
 
             <div className="sorting-input-panel">
@@ -223,26 +240,70 @@ function SortingVisualizer() {
 
             <InfoSection
                 pseudocodeContent={
-                    <>
-                        <div className={currentLine === 1 ? "code-line active-line" : "code-line"}>
-                            1. Start with the unsorted array
-                        </div>
-                        <div className={currentLine === 2 ? "code-line active-line" : "code-line"}>
-                            2. For each position i in the array
-                        </div>
-                        <div className={currentLine === 3 ? "code-line active-line" : "code-line"}>
-                            3. Assume the minimum is at index i
-                        </div>
-                        <div className={currentLine === 4 ? "code-line active-line" : "code-line"}>
-                            4. Scan the rest of the array for a smaller element
-                        </div>
-                        <div className={currentLine === 5 ? "code-line active-line" : "code-line"}>
-                            5. If index i already has the minimum, keep it
-                        </div>
-                        <div className={currentLine === 6 ? "code-line active-line" : "code-line"}>
-                            6. Otherwise, swap with the minimum element found
-                        </div>
-                    </>
+                    selectedAlgorithm === "Selection Sort" ? (
+                        <>
+                            <div className={currentLine === 1 ? "code-line active-line" : "code-line"}>
+                                1. Start with the unsorted array
+                            </div>
+                            <div className={currentLine === 2 ? "code-line active-line" : "code-line"}>
+                                2. For each position i in the array
+                            </div>
+                            <div className={currentLine === 3 ? "code-line active-line" : "code-line"}>
+                                3. Assume the minimum is at index i
+                            </div>
+                            <div className={currentLine === 4 ? "code-line active-line" : "code-line"}>
+                                4. Scan the rest of the array for a smaller element
+                            </div>
+                            <div className={currentLine === 5 ? "code-line active-line" : "code-line"}>
+                                5. If index i already has the minimum, keep it
+                            </div>
+                            <div className={currentLine === 6 ? "code-line active-line" : "code-line"}>
+                                6. Otherwise, swap with the minimum element found
+                            </div>
+                        </>
+                    ) : selectedAlgorithm === "Merge Sort" ? (
+                        <>
+                            <div className={currentLine === 1 ? "code-line active-line" : "code-line"}>
+                                1. Start with the unsorted array
+                            </div>
+                            <div className={currentLine === 2 ? "code-line active-line" : "code-line"}>
+                                2. If the subarray has one element, return
+                            </div>
+                            <div className={currentLine === 3 ? "code-line active-line" : "code-line"}>
+                                3. Split the array into two halves
+                            </div>
+                            <div className={currentLine === 4 ? "code-line active-line" : "code-line"}>
+                                4. Merge the sorted halves
+                            </div>
+                            <div className={currentLine === 5 ? "code-line active-line" : "code-line"}>
+                                5. Compare and place the smaller value
+                            </div>
+                            <div className={currentLine === 6 ? "code-line active-line" : "code-line"}>
+                                6. Finished sorting the array
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div className={currentLine === 1 ? "code-line active-line" : "code-line"}>
+                                1. Start with the unsorted array
+                            </div>
+                            <div className={currentLine === 2 ? "code-line active-line" : "code-line"}>
+                                2. If the subarray has one element, return
+                            </div>
+                            <div className={currentLine === 3 ? "code-line active-line" : "code-line"}>
+                                3. Choose a pivot
+                            </div>
+                            <div className={currentLine === 4 ? "code-line active-line" : "code-line"}>
+                                4. Compare values and partition around the pivot
+                            </div>
+                            <div className={currentLine === 5 ? "code-line active-line" : "code-line"}>
+                                5. Place pivot in its correct position
+                            </div>
+                            <div className={currentLine === 6 ? "code-line active-line" : "code-line"}>
+                                6. Finished sorting the array
+                            </div>
+                        </>
+                    )
                 }
                 explanation={currentExplanation}
             />
