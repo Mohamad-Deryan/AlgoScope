@@ -42,9 +42,6 @@ function Home() {
         </p>
       </section>
 
-      <footer className="home-footer">
-        <p>AlgoScope © 2026</p>
-      </footer>
     </div>
   );
 }
